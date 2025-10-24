@@ -24,8 +24,10 @@ class RegistrationApprovalPanel extends Component
 
     public function render()
     {
-        $registrations = Registration::where('status', 'verified')
-            ->where('subscription_plan', '!=', 'free')
+        // Show pending and verified registrations with paid plans
+        // (free plans are auto-provisioned, so we don't need to approve them)
+        $registrations = Registration::where('subscription_plan', '!=', 'free')
+            ->whereIn('status', ['pending', 'verified'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 

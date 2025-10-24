@@ -58,6 +58,19 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
+                            <div class="alert @if($selectedRegistration->status === 'pending') alert-warning @else alert-success @endif">
+                                <strong>Email Status:</strong>
+                                @if($selectedRegistration->status === 'pending')
+                                    <span class="badge bg-warning">⏳ Awaiting Email Verification</span>
+                                    <small class="d-block mt-2">Customer needs to click the verification link sent to their email before approval.</small>
+                                @else
+                                    <span class="badge bg-success">✓ Email Verified</span>
+                                    <small class="d-block mt-2">Customer has verified their email. You can approve now.</small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
                             <h6 class="fw-bold mb-3">Company</h6>
                             <div class="row mb-2">
                                 <div class="col-5 text-muted">Name:</div>
@@ -91,8 +104,12 @@
 
                         @if (!$showRejectionForm)
                             <div class="d-grid gap-2">
-                                <button type="button" class="btn btn-success" wire:click="approveRegistration()">
-                                    Approve
+                                <button type="button" class="btn btn-success" wire:click="approveRegistration()" @if($selectedRegistration->status !== 'verified') disabled @endif>
+                                    @if($selectedRegistration->status !== 'verified')
+                                        Approve (Awaiting Email Verification)
+                                    @else
+                                        Approve
+                                    @endif
                                 </button>
                                 <button type="button" class="btn btn-outline-danger" wire:click="toggleRejectionForm()">
                                     Reject
