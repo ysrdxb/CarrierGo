@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require:*)",
+      "Bash(php artisan:*)",
+      "Bash(php -r:*)",
+      "Bash(php -l:*)",
+      "Bash(for model in Freight Document Destination FreightType BankDetail Setting ReferenceNumber Registration OnboardingEmail)",
+      "Bash(do)",
+      "Bash(filepath=\"C:/xampp/htdocs/carriergo/app/Models/$model.php\")",
+      "Bash(__NEW_LINE__ if [ -f \"$filepath\" ])",
+      "Bash(! grep -q \"use App\\\\Traits\\\\BelongsToTenant\" \"$filepath\")",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for model in User Company Order Delivery Invoice Freight Document Destination FreightType BankDetail Setting ReferenceNumber Registration OnboardingEmail)",
+      "Bash(if grep -q \"BelongsToTenant\" \"$filepath\")",
+      "Bash(else)",
+      "Bash(php test_dashboard.php:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

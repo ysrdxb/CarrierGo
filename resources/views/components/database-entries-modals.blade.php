@@ -1,0 +1,5 @@
+    @include('components.add-client-modal')
+    @include('components.add-consignee-modal')
+    @include('components.add-merchant-modal')
+    @include('components.add-agent-modal')
+    @include('components.add-carrier-modal')
