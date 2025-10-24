@@ -18,11 +18,17 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        \Log::info('=== Dashboard Access ===');
+        \Log::info('User: ' . (Auth::user() ? Auth::user()->email : 'NOT LOGGED IN'));
+        \Log::info('Tenant ID: ' . (Auth::user()?->tenant_id ?? 'NULL'));
+
         try {
+            \Log::info('Checking if user is Admin...');
             if (Auth::user()->hasRole('Admin')) {
+                \Log::info('User is Admin');
                 $reference_numbers = ReferenceNumber::all();
                 $options = [];
-    
+
             foreach ($reference_numbers as $reference_number) {
                 $start = intval($reference_number->number_range);
                 $lastUsedReferenceParts = explode('-', $reference_number->last_used_reference);
@@ -89,11 +95,12 @@ class HomeController extends Controller
             return view('customer_dashboard');
             }
         } catch (\Exception $e) {
-            \Log::error('Dashboard error: ' . $e->getMessage(), [
-                'exception' => get_class($e),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
+            \Log::error('=== DASHBOARD ERROR ===');
+            \Log::error('Message: ' . $e->getMessage());
+            \Log::error('Exception: ' . get_class($e));
+            \Log::error('File: ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('Trace: ' . $e->getTraceAsString());
+
             return view('error', ['error' => $e->getMessage()]);
         }
     }
