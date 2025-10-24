@@ -16,15 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Global middleware for setting tenant context
-        $middleware->append(SetTenantContext::class);
+        // Register SetTenantContext globally (runs on every request)
+        $middleware->use([
+            SetTenantContext::class,
+        ]);
 
         $middleware->alias([
             'otp' => VerifyOTP::class,
-        ]);
-
-        // admin middleware
-        $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
     })
