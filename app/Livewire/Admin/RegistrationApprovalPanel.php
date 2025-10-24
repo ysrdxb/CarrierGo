@@ -51,14 +51,41 @@ class RegistrationApprovalPanel extends Component
             $registration = $this->selectedRegistration;
             $registration->markAsApproved();
 
+            // Create Tenant record
+            $tenant = \App\Models\Tenant::create([
+                'name' => $registration->company_name,
+                'domain' => $registration->domain,
+                'subscription_plan' => $registration->subscription_plan,
+                'subscription_status' => 'pending', // Will be set to 'active' by ProvisionTenant job
+                'created_by_admin' => true,
+                'approval_status' => 'approved',
+                'trial_days' => 14,
+                'trial_expires_at' => now()->addDays(14),
+                'tenancy_mode' => 'SHARED',
+            ]);
+
+            // Create Company record
+            \App\Models\Company::create([
+                'tenant_id' => $tenant->id,
+                'name' => $registration->company_name,
+                'address' => '',
+                'zip_code' => '',
+                'city' => '',
+                'country' => '',
+            ]);
+
+            // Update registration with tenant_id
+            $registration->update(['tenant_id' => $tenant->id]);
+
+            // Dispatch the ProvisionTenant job to create admin user
             ProvisionTenant::dispatch(
-                companyName: $registration->company_name,
-                domain: $registration->domain,
-                firstName: $registration->firstname,
-                lastName: $registration->lastname,
+                tenant: $tenant,
+                firstname: $registration->firstname,
+                lastname: $registration->lastname,
                 email: $registration->email,
                 password: $registration->password_hash,
-                isPlainText: false
+                isPlainText: false,
+                tenancyMode: 'SHARED'
             );
 
             $loginUrl = url('/login');
@@ -77,6 +104,7 @@ class RegistrationApprovalPanel extends Component
             ]);
 
             $this->selectedRegistration = null;
+            \Log::info("Registration {$registration->id} approved and tenant provisioned");
 
         } catch (\Exception $e) {
             \Log::error('Registration approval error: ' . $e->getMessage());

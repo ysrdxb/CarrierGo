@@ -36,13 +36,14 @@ use App\Livewire\Admin\TenantManager;
 use App\Livewire\Admin\SubscriptionManager;
 use App\Livewire\Admin\AnalyticsDashboard;
 use App\Livewire\Admin\AdminUserManager;
+use App\Livewire\Admin\RegistrationApprovalPanel;
 
 Livewire::setScriptRoute(function($handle) {
-    return Route::get('/livewire/livewire.js', $handle);
+    return Route::get('/carriergo/livewire/livewire.js', $handle);
 });
 
 Livewire::setUpdateRoute(function($handle) {
-    return Route::get('/livewire/update', $handle);
+    return Route::get('/carriergo/livewire/update', $handle);
 });
 
 // Public routes
@@ -93,6 +94,9 @@ Route::middleware(['auth'])->group(function () {
 
 		// admin panel - admin user management
 		Route::get('/admin/users', AdminUserManager::class)->name('admin.users.list');
+
+		// admin panel - registration approvals
+		Route::get('/admin/registrations/approvals', RegistrationApprovalPanel::class)->name('admin.registrations.approvals');
 
 	});
 

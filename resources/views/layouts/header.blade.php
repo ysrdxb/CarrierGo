@@ -84,6 +84,9 @@
                                                     <a class="dropdown-item" href="{{ route('admin.tenants.list') }}">
                                                         <i class="dropdown-icon fe fe-users"></i> Manage Tenants
                                                     </a>
+                                                    <a class="dropdown-item" href="{{ route('admin.registrations.approvals') }}">
+                                                        <i class="dropdown-icon fe fe-check-circle"></i> Approve Registrations
+                                                    </a>
                                                     <a class="dropdown-item" href="{{ route('settings.list') }}">
                                                         <i class="dropdown-icon fe fe-settings"></i> Settings
                                                     </a>                         

@@ -70,7 +70,7 @@ class ProvisionTenant implements ShouldQueue
             \Log::info("Successfully provisioned tenant {$this->tenant->id} in {$this->tenancyMode} mode");
 
         } catch (\Exception $e) {
-            dd("Failed to provision tenant {$this->tenant->id}: " . $e->getMessage());
+            \Log::error("Failed to provision tenant {$this->tenant->id}: " . $e->getMessage());
             $this->tenant->update(['subscription_status' => 'failed']);
             throw $e;
         }
