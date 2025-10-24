@@ -13,18 +13,22 @@ use Illuminate\Http\Request;
  */
 class SetTenantContext
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        // Only initialize tenant if user is logged in AND has a tenant_id
-        if (auth()->check() && auth()->user()->tenant_id) {
-            try {
-                tenancy()->initialize(auth()->user()->tenant_id);
-            } catch (\Exception $e) {
-                \Log::error('Tenant context error: ' . $e->getMessage());
-                // Continue without tenant context
+        // SHARED database mode: just set tenant_id in app container
+        // No database switching needed - all tenants use same 'carrierlab' database
+        // Data isolation is handled by BelongsToTenant trait (adds tenant_id filter to queries)
+
+        try {
+            if (auth()->check() && auth()->user() && auth()->user()->tenant_id) {
+                \Log::debug('SetTenantContext: tenant_id = ' . auth()->user()->tenant_id);
+                app()->instance('tenant_id', auth()->user()->tenant_id);
             }
+        } catch (\Exception $e) {
+            \Log::error('SetTenantContext error: ' . $e->getMessage());
+            // Continue without tenant context
         }
-        
+
         return $next($request);
     }
 }
