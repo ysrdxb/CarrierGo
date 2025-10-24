@@ -21,9 +21,13 @@ class HomeController extends Controller
         \Log::info('=== Dashboard Access ===');
         \Log::info('User: ' . (Auth::user() ? Auth::user()->email : 'NOT LOGGED IN'));
         \Log::info('Tenant ID: ' . (Auth::user()?->tenant_id ?? 'NULL'));
+        \Log::info('App tenant_id: ' . (app()->has('tenant_id') ? app()->make('tenant_id') : 'NOT SET'));
 
         try {
             \Log::info('Checking if user is Admin...');
+            if (!Auth::user()) {
+                throw new \Exception('No authenticated user');
+            }
             if (Auth::user()->hasRole('Admin')) {
                 \Log::info('User is Admin');
                 $reference_numbers = ReferenceNumber::all();

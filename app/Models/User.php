@@ -13,7 +13,8 @@ use App\Traits\BelongsToTenant;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, SoftDeletes, SoftDeletesTrait, BelongsToTenant;
+    // TEMPORARILY DISABLED BelongsToTenant to test if it causes memory leak
+    use HasFactory, Notifiable, HasRoles, SoftDeletes, SoftDeletesTrait; // BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.

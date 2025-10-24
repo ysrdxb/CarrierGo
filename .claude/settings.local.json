@@ -17,7 +17,9 @@
       "Bash(for model in User Company Order Delivery Invoice Freight Document Destination FreightType BankDetail Setting ReferenceNumber Registration OnboardingEmail)",
       "Bash(if grep -q \"BelongsToTenant\" \"$filepath\")",
       "Bash(else)",
-      "Bash(php test_dashboard.php:*)"
+      "Bash(php test_dashboard.php:*)",
+      "Bash(cat:*)",
+      "Read(//c/xampp/apache/logs/**)"
     ],
     "deny": [],
     "ask": []

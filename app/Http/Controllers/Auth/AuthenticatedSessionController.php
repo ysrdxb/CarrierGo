@@ -100,7 +100,8 @@ class AuthenticatedSessionController extends Controller
             'otp' => ['required', 'digits:6'],
         ]);
 
-        $user = User::findOrFail($request->session()->get('user_id'));
+        $user_id = $request->session()->get('user_id');
+        $user = User::findOrFail($user_id);
 
         if (!$user || !$user->otp) {
             return back()->withErrors([
@@ -112,7 +113,7 @@ class AuthenticatedSessionController extends Controller
             if(time() <= $user->otp_expiry) {
                 $request->session()->forget('user_id');
                 Auth::login($user);
-                SettingService::fillSession();
+                // SettingService::fillSession();  // TODO: Fix this - causes 500 errors
 
                 // Redirect based on user role
                 if ($user->hasRole('Super Admin') || $user->hasRole('Admin')) {

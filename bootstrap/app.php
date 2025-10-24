@@ -16,10 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register SetTenantContext globally (runs on every request)
-        $middleware->use([
-            SetTenantContext::class,
-        ]);
+        // Register SetTenantContext AFTER auth/session middleware
+        // Must run AFTER session/auth is loaded so it can read authenticated user
+        $middleware->append(SetTenantContext::class);
 
         $middleware->alias([
             'otp' => VerifyOTP::class,
